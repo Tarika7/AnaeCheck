@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Submission Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .do {
+            color: green;
+        }
+        .dont {
+            color: red;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Form Submitted Successfully!</h1>
+
+    <h3>Submitted Data:</h3>
+    <ul>
+    {% for key, value in data.items() %}
+        {% if key not in ['Advice Message', 'Recommended Actions', 'Avoid These'] %}
+            <li><strong>{{ key }}:</strong> {{ value if value else "Not provided" }}</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+
+    <hr>
+
+    {% if data['Advice Message'] %}
+    <h2>🩺 AI-Based Health Advice</h2>
+    <p><strong>{{ data['Advice Message'] }}</strong></p>
+
+    <h3 class="do">✅ Things to Do:</h3>
+    <ul>
+      {% for item in data['Recommended Actions'] %}
+        <li class="do">{{ item }}</li>
+      {% endfor %}
+    </ul>
+
+    <h3 class="dont">🚫 Things to Avoid:</h3>
+    <ul>
+      {% for item in data['Avoid These'] %}
+        <li class="dont">{{ item }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <a class="back-link" href="{{ url_for('form') }}">🔙 Back to Form</a>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>AnaeCheck Form</title>
+    <script>
+      // Show/hide female-specific fields based on gender
+      function toggleFemaleFields() {
+          const gender = document.querySelector('input[name="gender"]:checked').value;
+          document.getElementById('female-fields').style.display = gender === 'Female' ? 'block' : 'none';
+      }
+      window.onload = () => {
+          toggleFemaleFields();
+          document.querySelectorAll('input[name="gender"]').forEach(radio => {
+              radio.addEventListener('change', toggleFemaleFields);
+          });
+      };
+
+      // Breath-hold timer logic
+      let timer;
+      let seconds = 0;
+      function updateTimer() {
+        seconds++;
+        document.getElementById('timer-display').innerText = seconds + " sec";
+      }
+      function startTimer() {
+        if (!timer) {
+          timer = setInterval(updateTimer, 1000);
+          seconds = 0;  // reset timer on start
+          document.getElementById('timer-display').innerText = "0 sec";
+          document.getElementById('breath_hold_timer').value = "";
+        }
+      }
+      function stopTimer() {
+        clearInterval(timer);
+        timer = null;
+        document.getElementById('breath_hold_timer').value = seconds;
+      }
+    </script>
+</head>
+<body>
+    <h1>AnaeCheck Form</h1>
+    <form action="{{ url_for('submit') }}" method="POST" enctype="multipart/form-data">
+        <h3>1. Personal Information</h3>
+        Full Name: <input type="text" name="full_name" required /><br /><br />
+
+        Gender:
+        <input type="radio" name="gender" value="Male" checked /> Male
+        <input type="radio" name="gender" value="Female" /> Female
+        <input type="radio" name="gender" value="Other" /> Other<br /><br />
+
+        Age: <input type="number" name="age" min="0" required /><br /><br />
+
+        <div id="female-fields" style="display:none;">
+            <h3>2. Female-Specific Information</h3>
+            Menstrual History:
+            <select name="menstrual_history">
+                <option value="Normal">Normal</option>
+                <option value="Heavy">Heavy</option>
+                <option value="Irregular">Irregular</option>
+            </select><br /><br />
+
+            Pregnancy Status:
+            <select name="pregnancy_status">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Not sure">Not sure</option>
+            </select><br /><br />
+        </div>
+
+        <h3>3. Lifestyle & Medical History</h3>
+        Diet Type:
+        <select name="diet_type">
+            <option value="Non-Vegetarian">Non-Vegetarian</option>
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Vegan">Vegan</option>
+        </select><br /><br />
+
+        Smoking Status:
+        <select name="smoking_status">
+            <option value="Non-Smoker">Non-Smoker</option>
+            <option value="Smoker">Smoker</option>
+            <option value="Former">Former</option>
+        </select><br /><br />
+
+        Recent Blood Donation:
+        <select name="recent_blood_donation">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br /><br />
+
+        Past Anaemia Diagnosis:
+        <select name="past_anaemia_diagnosis">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br /><br />
+
+        <h3>4. Symptom Frequency</h3>
+        Fatigue Frequency:
+        <select name="fatigue_frequency">
+            <option value="None">None</option>
+            <option value="Rarely">Rarely</option>
+            <option value="Sometimes">Sometimes</option>
+            <option value="Often">Often</option>
+        </select><br /><br />
+
+        Dizziness Frequency:
+        <select name="dizziness_frequency">
+            <option value="No">No</option>
+            <option value="Sometimes">Sometimes</option>
+            <option value="Often">Often</option>
+        </select><br /><br />
+
+        Headache Frequency:
+        <select name="headache_frequency">
+            <option value="Never">Never</option>
+            <option value="Sometimes">Sometimes</option>
+            <option value="Often">Often</option>
+        </select><br /><br />
+
+        Cold Sensitivity:
+        <select name="cold_sensitivity">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br /><br />
+
+        Pica Habit:
+        <select name="pica_habit">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br /><br />
+
+        <h3>5. Functional Test</h3>
+        <button type="button" onclick="startTimer()">Start Timer</button>
+        <button type="button" onclick="stopTimer()">Stop Timer</button>
+        <span id="timer-display">0 sec</span><br />
+        <input type="hidden" id="breath_hold_timer" name="breath_hold_timer" /><br /><br />
+
+        <h3>6. Image Upload</h3>
+        Upload Nail/Conjunctiva Image: <input type="file" name="nail_conjunctiva_image" accept="image/*" /><br /><br />
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
